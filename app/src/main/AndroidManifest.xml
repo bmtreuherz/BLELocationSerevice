@@ -13,8 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ListenerActivity" />
-        <activity android:name=".EmitterActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" />
+        <activity android:name=".EmitterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

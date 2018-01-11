@@ -13,7 +13,7 @@ import java.util.*
 class ListenerActivity : AppCompatActivity() {
 
     // Configuration members
-    private val appUUID = UUID.fromString("0CF052C297CA407C84F8B62AAC4E9020")
+    private val appUUID = UUID.fromString("7b334cce-f705-11e7-8c3f-9a214cf093ae")
     private lateinit var beaconProtocol: BeaconProtocol
 
     // Bluetooth related members
@@ -59,7 +59,7 @@ class ListenerActivity : AppCompatActivity() {
 
         // Create a bit mask to indicate filtering based on only the first 17 bits
         for (i in 0..17){
-            manufacturerDataMask.put(0x01 as Byte)
+            manufacturerDataMask.put(0x01.toByte())
         }
 
         // Set the filter

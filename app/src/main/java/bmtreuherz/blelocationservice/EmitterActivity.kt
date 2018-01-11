@@ -12,8 +12,8 @@ import java.util.*
 class EmitterActivity : AppCompatActivity() {
 
     // Configuration members
-    private val appUUID = UUID.fromString("0CF052C297CA407C84F8B62AAC4E9020")
-    private val defaultTXPower = 0x5B as Byte // This is the value -75DB for nexus 9. This is different for
+    private val appUUID = UUID.fromString("7b334cce-f705-11e7-8c3f-9a214cf093ae")
+    private val defaultTXPower = 0x5B.toByte()// This is the value -75DB for nexus 9. This is different for
     // every device and a better way of determining this for each device should be explored.
     private lateinit var beaconProtocol: BeaconProtocol
 
