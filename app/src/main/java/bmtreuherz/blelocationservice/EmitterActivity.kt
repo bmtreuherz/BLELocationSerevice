@@ -72,7 +72,7 @@ class EmitterActivity : AppCompatActivity() {
         builder.setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_MEDIUM)
         advertiseSettings = builder.build()
     }
-    
+
     private fun startAdvertising(){
         blueoothLeAdvertiser.startAdvertising(advertiseSettings, advertiseData, object: AdvertiseCallback(){})
     }
