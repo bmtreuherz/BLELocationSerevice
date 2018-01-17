@@ -4,7 +4,10 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
 import bmtreuherz.blelocationservice.utilities.BeaconProtocol
+import bmtreuherz.blelocationservice.utilities.calculateDistanceAltBeaconAlgorithm
 import bmtreuherz.blelocationservice.utilities.getBytesFromUUID
 import bmtreuherz.blelocationservice.utilities.getUUIDFromBytes
 import java.nio.ByteBuffer
@@ -14,18 +17,43 @@ class ListenerActivity : AppCompatActivity() {
 
     // Configuration members
     private val appUUID = UUID.fromString("7b334cce-f705-11e7-8c3f-9a214cf093ae")
-    private lateinit var beaconProtocol: BeaconProtocol
+    lateinit private var beaconProtocol: BeaconProtocol
 
     // Bluetooth related members
-    private lateinit var bluetoothAdapter: BluetoothAdapter
-    private lateinit var blueoothLeScanner: BluetoothLeScanner
-    private lateinit var blueoothLeAdvertiser: BluetoothLeAdvertiser
-    private lateinit var scanFilter: ScanFilter
-    private lateinit var scanSettings: ScanSettings
+    lateinit private var bluetoothAdapter: BluetoothAdapter
+    lateinit private var blueoothLeScanner: BluetoothLeScanner
+    lateinit private var blueoothLeAdvertiser: BluetoothLeAdvertiser
+    lateinit private var scanFilter: ScanFilter
+    lateinit private var scanSettings: ScanSettings
+
+    // UI Elements
+    private lateinit var startScanButton: Button
+    private lateinit var foundTV: TextView
+    private lateinit var UUIDTV: TextView
+    private lateinit var majorTV: TextView
+    private lateinit var minorTV: TextView
+    private lateinit var distanceTV: TextView
+    private lateinit var rssiTV: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_listener)
+
+        // Find UI elements
+        startScanButton = findViewById(R.id.startListeningButton)
+        foundTV = findViewById(R.id.foundTV)
+        UUIDTV = findViewById(R.id.UUIDTV)
+        majorTV = findViewById(R.id.majorTV)
+        minorTV = findViewById(R.id.minorTV)
+        distanceTV = findViewById(R.id.distanceTV)
+        rssiTV = findViewById(R.id.rssiTV)
+
+        // Set the click listener
+        startScanButton.setOnClickListener {
+            // TODO: Ignore button press if already scanning
+            startScan()
+        }
 
         // Set the beacon protocl
         beaconProtocol = BeaconProtocol.ALT_BEACON
@@ -38,7 +66,6 @@ class ListenerActivity : AppCompatActivity() {
         // Setup the BLE Scanner
         setScanFilter()
         setScanSettings()
-
     }
 
     // Scanner Setup
@@ -77,6 +104,7 @@ class ListenerActivity : AppCompatActivity() {
 
     // Starts Scanning
     private fun startScan(){
+        startScanButton.text = "Scanning"
         blueoothLeScanner.startScan(Arrays.asList(scanFilter), scanSettings, object: ScanCallback(){
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 super.onScanResult(callbackType, result)
@@ -114,8 +142,23 @@ class ListenerActivity : AppCompatActivity() {
         bufferedData.get(minor, 0, 2)
 
         var rssi = result.rssi
-    }
+        var txPowerLevel = scanRecord.txPowerLevel
+        var distance = calculateDistanceAltBeaconAlgorithm(txPowerLevel, rssi)
 
+        // SET UI ELEMENTS
+        foundTV.text = "Found: Yes"
+        UUIDTV.text = uuid.toString()
+        majorTV.text = major.toString()
+        minorTV.text = minor.toString()
+        distanceTV.text = distance.toString()
+        rssiTV.text = rssi.toString()
+
+        blueoothLeScanner.stopScan(object: ScanCallback(){
+            override fun onScanResult(callbackType: Int, result: ScanResult?) {
+                startScanButton.text = "Start Scanning"
+            }
+        })
+    }
 }
 
 

@@ -1,6 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/signInTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="Listener Activity"
+        android:textSize="36dp"/>
+
+    <Button
+        android:id="@+id/startListeningButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/signInTV"
+        android:layout_centerHorizontal="true"
+        android:text="Start Listening"/>
+
+    <TextView
+        android:id="@+id/foundTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/startListeningButton"
+        android:layout_centerHorizontal="true"
+        android:text="Found: No"/>
+    <TextView
+        android:id="@+id/UUIDTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/foundTV"
+        android:layout_centerHorizontal="true"
+        android:text="UUID: N/A"/>
+    <TextView
+        android:id="@+id/majorTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/UUIDTV"
+        android:layout_centerHorizontal="true"
+        android:text="Major: N/A"/>
+    <TextView
+        android:id="@+id/minorTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/majorTV"
+        android:layout_centerHorizontal="true"
+        android:text="Minor: N/A"/>
+    <TextView
+        android:id="@+id/distanceTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/minorTV"
+        android:layout_centerHorizontal="true"
+        android:text="Distance: N/A"/>
+    <TextView
+        android:id="@+id/rssiTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/distanceTV"
+        android:text="RSSI: N/A"/>
+</RelativeLayout>

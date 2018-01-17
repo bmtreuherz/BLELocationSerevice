@@ -31,8 +31,8 @@ fun calculateDistance(txPower: Int, rssi: Double): Double{
 // Distance < 1 can be considered immediate vicinity
 // Distance [1,3] is close
 // Distance >3 is far
-fun calculateDistanceAltBeaconAlgorithm(txPower: Int, rssi: Double): Double{
-    if (rssi == 0.0) return -1.0
+fun calculateDistanceAltBeaconAlgorithm(txPower: Int, rssi: Int): Double{
+    if (rssi == 0) return -1.0
 
     var ratio = rssi * 1.0 / txPower
 
