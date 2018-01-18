@@ -14,9 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ListenerActivity" />
-        <activity android:name=".JavaListenerActivity" />
+        <activity android:name=".NewListenerActivity" />
 
-        <activity android:name=".EmitterActivity" />
+        <activity android:name=".NewEmitterActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

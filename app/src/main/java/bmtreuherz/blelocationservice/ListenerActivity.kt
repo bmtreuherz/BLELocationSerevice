@@ -85,7 +85,7 @@ class ListenerActivity : AppCompatActivity() {
         }
 
         // Create a bit mask to indicate filtering based on only the first 17 bits
-        for (i in 0..17){
+        for (i in 0..1){
             manufacturerDataMask.put(0x01.toByte())
         }
 

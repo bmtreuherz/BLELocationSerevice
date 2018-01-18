@@ -21,4 +21,37 @@
         android:layout_below="@+id/signInTV"
         android:layout_centerHorizontal="true"
         android:text="Start Advertising"/>
+
+    <TextView
+        android:id="@+id/majorLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/startAdvertisingButton"
+        android:layout_centerHorizontal="true"
+        android:text="Major"/>
+    <EditText
+        android:id="@+id/majorTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/majorLabel"
+        android:layout_centerHorizontal="true"
+        android:text="0"/>
+    <TextView
+        android:id="@+id/minorLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/majorTV"
+        android:layout_centerHorizontal="true"
+        android:text="Minor"/>
+    <EditText
+        android:id="@+id/minorTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/minorLabel"
+        android:layout_centerHorizontal="true"
+        android:text="0"/>
 </RelativeLayout>

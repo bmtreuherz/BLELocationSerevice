@@ -19,14 +19,14 @@ class MainActivity : AppCompatActivity() {
         scanButton = findViewById(R.id.scanButton)
 
         emitButton.setOnClickListener {
-            var intent = Intent(this, EmitterActivity::class.java)
+            var intent = Intent(this, NewEmitterActivity::class.java)
             startActivity(intent)
         }
 
         scanButton.setOnClickListener {
 //            var intent = Intent(this, ListenerActivity::class.java)
             Log.d("MAIN ACTIVITY", "GOING TO LISTENER!")
-            var intent = Intent(this, JavaListenerActivity::class.java)
+            var intent = Intent(this, NewListenerActivity::class.java)
             startActivity(intent)
 
         }
