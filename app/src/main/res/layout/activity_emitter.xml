@@ -23,14 +23,31 @@
         android:text="Start Advertising"/>
 
     <TextView
-        android:id="@+id/majorLabel"
+        android:id="@+id/payloadTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:layout_below="@+id/startAdvertisingButton"
         android:layout_centerHorizontal="true"
-        android:text="Major"/>
+        android:text="Payload (btwn 0 and 4,294,967,295)"/>
     <EditText
+        android:id="@+id/payloadET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/payloadTV"
+        android:layout_centerHorizontal="true"
+        android:text="0"/>
+
+    <TextView
+        android:id="@+id/majorLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/payloadET"
+        android:layout_centerHorizontal="true"
+        android:text="Major (btwn 0 and 65535)"/>
+    <TextView
         android:id="@+id/majorTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,8 +62,8 @@
         android:layout_marginTop="20dp"
         android:layout_below="@+id/majorTV"
         android:layout_centerHorizontal="true"
-        android:text="Minor"/>
-    <EditText
+        android:text="Minor (btwn 0 and 65535)"/>
+    <TextView
         android:id="@+id/minorTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

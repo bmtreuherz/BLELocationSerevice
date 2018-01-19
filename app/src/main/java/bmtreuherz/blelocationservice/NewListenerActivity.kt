@@ -40,6 +40,7 @@ class NewListenerActivity : AppCompatActivity() {
     lateinit private var scanButton: Button
     private lateinit var foundTV: TextView
     private lateinit var UUIDTV: TextView
+    private lateinit var payloadTV: TextView
     private lateinit var majorTV: TextView
     private lateinit var minorTV: TextView
     private lateinit var distanceTV: TextView
@@ -65,6 +66,7 @@ class NewListenerActivity : AppCompatActivity() {
         scanButton.setOnClickListener { scanLeDevice(!isScanning) }
         foundTV = findViewById(R.id.foundTV)
         UUIDTV = findViewById(R.id.UUIDTV)
+        payloadTV = findViewById(R.id.payloadTV)
         majorTV = findViewById(R.id.majorTV)
         minorTV = findViewById(R.id.minorTV)
         distanceTV = findViewById(R.id.distanceTV)
@@ -118,7 +120,7 @@ class NewListenerActivity : AppCompatActivity() {
 
 
         // Set the UUID
-        var uuid = getBytesFromUUID(UUID.fromString("13f5468a-3324-426b-bb69-e0071a8caa10"))
+        var uuid = getBytesFromUUID(UUID.fromString("3F643DCB-DD1E-4300-8FD6-91543CD0E648"))
 
 
         for (i in 2..17){
@@ -126,8 +128,7 @@ class NewListenerActivity : AppCompatActivity() {
         }
 
         // Create a bit mask to indicate filtering based on only the first 17 bits
-//        for (i in 0..17){
-        for (i in 0..1) {
+        for (i in 0..17) {
 
             manufacturerDataMask.put(0x11.toByte())
         }
@@ -227,12 +228,22 @@ class NewListenerActivity : AppCompatActivity() {
         var txPowerLevel = scanRecord.txPowerLevel
         var distance = calculateDistanceAltBeaconAlgorithm(txPowerLevel, rssi)
 
+        // TODO: May not need this after testing.. just want payload
         var majorInt = ByteBuffer.wrap(major).char.toInt()
         var minorInt = ByteBuffer.wrap(minor).char.toInt()
+
+        var payloadArray = ByteArray(8)
+        payloadArray[4] = major[0]
+        payloadArray[5] = major[1]
+        payloadArray[6] = minor[0]
+        payloadArray[7] = minor[1]
+
+        var payload = bytesToLong(payloadArray)
 
         // SET UI ELEMENTS
         foundTV.text = "Found: Yes"
         UUIDTV.text = "UUID: " + uuid.toString()
+        payloadTV.text = "Payload: " + payload.toString()
         majorTV.text = "Major: " + majorInt.toString()
         minorTV.text = "Minor: " + minorInt.toString()
         distanceTV.text = "Distance: " + distance.toString()
@@ -244,9 +255,18 @@ class NewListenerActivity : AppCompatActivity() {
     private fun clearUI(){
         foundTV.text = "Found: No"
         UUIDTV.text = "UUID: N/A"
+        payloadTV.text = "Payload: N/A"
         majorTV.text = "Major N/A: "
         minorTV.text = "Minor N/A: "
         distanceTV.text = "Distance: N/A"
         rssiTV.text = "RSSI: N/A"
+    }
+
+    // TODO: PUT IN UTILITY
+    fun bytesToLong(bytes: ByteArray): Long {
+        val buffer = ByteBuffer.allocate(java.lang.Long.BYTES)
+        buffer.put(bytes)
+        buffer.flip()//need flip
+        return buffer.long
     }
 }
