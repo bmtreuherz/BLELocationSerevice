@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/messageET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        android:text="Message the client is subscribed too"/>
+
+    <Button
+        android:id="@+id/notifyClientButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/messageET"
+        android:layout_centerHorizontal="true"
+        android:text="Notify Client"/>
+
+    <TextView
+        android:id="@+id/statusTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/notifyClientButton"
+        android:layout_centerHorizontal="true"
+        android:text="Status: Not Connected"/>
+
+    <TextView
+        android:id="@+id/clientMessageTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/statusTV"
+        android:layout_centerHorizontal="true"
+        android:text="Message: N/A"/>
+
+
+</RelativeLayout>

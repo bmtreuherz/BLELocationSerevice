@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import bmtreuherz.blelocationservice.GattStuff.Client.ScanActivity
+import bmtreuherz.blelocationservice.GattStuff.Server.GattServerActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,14 +21,13 @@ class MainActivity : AppCompatActivity() {
         scanButton = findViewById(R.id.scanButton)
 
         emitButton.setOnClickListener {
-            var intent = Intent(this, NewEmitterActivity::class.java)
+            var intent = Intent(this, GattServerActivity::class.java)
             startActivity(intent)
         }
 
         scanButton.setOnClickListener {
 //            var intent = Intent(this, ListenerActivity::class.java)
-            Log.d("MAIN ACTIVITY", "GOING TO LISTENER!")
-            var intent = Intent(this, NewListenerActivity::class.java)
+            var intent = Intent(this, ScanActivity::class.java)
             startActivity(intent)
 
         }

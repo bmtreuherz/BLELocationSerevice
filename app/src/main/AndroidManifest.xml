@@ -15,7 +15,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ListenerActivity" />
         <activity android:name=".NewListenerActivity" />
-
         <activity android:name=".NewEmitterActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -24,6 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".GattStuff.Server.GattServerActivity" />
+        <activity android:name=".GattStuff.Client.ScanActivity"></activity>
     </application>
 
 </manifest>
