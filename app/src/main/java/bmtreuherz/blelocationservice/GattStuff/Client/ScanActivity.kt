@@ -1,11 +1,11 @@
 package bmtreuherz.blelocationservice.GattStuff.Client
 
+import android.app.Activity
 import android.bluetooth.*
 import android.bluetooth.le.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.ParcelUuid
@@ -14,14 +14,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import bmtreuherz.blelocationservice.GattStuff.Server.GameObjectProfile
-import bmtreuherz.blelocationservice.GattStuff.Server.GattServerActivity
+import bmtreuherz.blelocationservice.GattStuff.Utilities.MessageFactory
 import bmtreuherz.blelocationservice.R
-import java.util.*
-import java.util.jar.Manifest
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class ScanActivity : AppCompatActivity() {
+class ScanActivity : Activity() {
 
     companion object {
         val TAG = ScanActivity::class.java.simpleName
@@ -46,6 +44,60 @@ class ScanActivity : AppCompatActivity() {
     lateinit private var serverMessageTV: TextView
     lateinit private var sendToServerButton: Button
     lateinit private var messageET: EditText
+
+    // TODO: THIS SHOULD BE COMMON BETWEEN BOTH CLIENT AND SERVER
+    private var positionMap = HashMap<Int, MessageFactory.PositionMessage>()
+    private var rotationMap = HashMap<Int, MessageFactory.RotationMessage>()
+
+    fun updateAssetPosition(id: Int, x: Float, y: Float, z: Float){
+
+        var notifyServer = false
+        var newPosition = MessageFactory.PositionMessage(id, x, y, z)
+
+        if(!positionMap.containsKey(id)){
+            positionMap.put(id, newPosition)
+            notifyServer = true
+        } else {
+            var position = positionMap.get(id)
+
+            if (position?.equals(newPosition) != true){
+                notifyServer = true
+            }
+        }
+
+        if (notifyServer){
+            var service = gatt?.getService(GameObjectProfile.GAME_OBJECT_SERVICE_UUID)
+            var characteristic = service?.getCharacteristic(GameObjectProfile.CLIENT_TO_SERVER_POSITION_CHARACTERISTIC_UUID)
+            var message = MessageFactory.createPositionValue(newPosition)
+            characteristic?.value = message
+            var success = gatt?.writeCharacteristic(characteristic)
+        }
+    }
+
+    fun updateAssetOrientation(id: Int, x: Float, y: Float, z: Float){
+
+        var notifyServer = false
+        var newOrientation = MessageFactory.RotationMessage(id, x, y, z)
+
+        if(!rotationMap.containsKey(id)){
+            rotationMap.put(id, newOrientation)
+            notifyServer = true
+        } else {
+            var rotation = rotationMap.get(id)
+
+            if (rotation?.equals(newOrientation) != true){
+                notifyServer = true
+            }
+        }
+
+        if (notifyServer){
+            var service = gatt?.getService(GameObjectProfile.GAME_OBJECT_SERVICE_UUID)
+            var characteristic = service?.getCharacteristic(GameObjectProfile.CLIENT_TO_SERVER_ROTATION_CHARACTERISTIC_UUID)
+            var message = MessageFactory.createRotationValue(newOrientation)
+            characteristic?.value = message
+            var success = gatt?.writeCharacteristic(characteristic)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -201,13 +253,20 @@ class ScanActivity : AppCompatActivity() {
             }
 
             var service = gatt?.getService(GameObjectProfile.GAME_OBJECT_SERVICE_UUID)
-            var outCharacteristic = service?.getCharacteristic(GameObjectProfile.CLIENT_TO_SERVER_CHARACTERISTIC_UUID)
-            var inCharacteristic = service?.getCharacteristic(GameObjectProfile.SERVER_TO_CLIENT_CHARACTERISTIC_UUID)
 
-            outCharacteristic?.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+            var outPositionCharacteristic = service?.getCharacteristic(GameObjectProfile.CLIENT_TO_SERVER_POSITION_CHARACTERISTIC_UUID)
+            var outRotationCharacteristic = service?.getCharacteristic(GameObjectProfile.CLIENT_TO_SERVER_ROTATION_CHARACTERISTIC_UUID)
+            var inPositionCharacteristic = service?.getCharacteristic(GameObjectProfile.SERVER_TO_CLIENT_POSITION_CHARACTERISTIC_UUID)
+            var inRotationCharacteristic = service?.getCharacteristic(GameObjectProfile.SERVER_TO_CLIENT_ROTATION_CHARACTERISTIC_UUID)
 
-            // TODO: Do more with this initalized
-            var initialized = gatt?.setCharacteristicNotification(inCharacteristic, true)
+
+
+            outPositionCharacteristic?.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+            outRotationCharacteristic?.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+
+
+            gatt?.setCharacteristicNotification(inPositionCharacteristic, true)
+            gatt?.setCharacteristicNotification(inRotationCharacteristic, true)
         }
 
         override fun onCharacteristicWrite(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {
@@ -217,10 +276,17 @@ class ScanActivity : AppCompatActivity() {
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?) {
             super.onCharacteristicChanged(gatt, characteristic)
-            var messageBytes = characteristic?.value
-            var message = String(messageBytes!!)
-            Log.d(TAG, "RECEIVED MESSAGE " + message)
-            runOnUiThread({serverMessageTV.text = "Message: " + message})
+
+            when(characteristic?.uuid){
+                GameObjectProfile.SERVER_TO_CLIENT_POSITION_CHARACTERISTIC_UUID -> {
+                    var positionMessage = MessageFactory.createPositonFromBytes(characteristic?.value!!)
+                    // TODO: Do action when position changes
+                }
+                GameObjectProfile.SERVER_TO_CLIENT_ROTATION_CHARACTERISTIC_UUID -> {
+                    var rotationMessage = MessageFactory.createRotationFromBytes(characteristic?.value!!)
+                    // TODO: Do action when rotation changes
+                }
+            }
         }
     }
 
@@ -240,12 +306,12 @@ class ScanActivity : AppCompatActivity() {
             return
         }
 
-        var service = gatt?.getService(GameObjectProfile.GAME_OBJECT_SERVICE_UUID)
-        var characteristic = service?.getCharacteristic(GameObjectProfile.CLIENT_TO_SERVER_CHARACTERISTIC_UUID)
-        var message = messageET.text.toString()
-        var messageBytes = message.toByteArray()
-
-        characteristic?.value = messageBytes
-        var success = gatt?.writeCharacteristic(characteristic)
+//        var service = gatt?.getService(GameObjectProfile.GAME_OBJECT_SERVICE_UUID)
+//        var characteristic = service?.getCharacteristic(GameObjectProfile.CLIENT_TO_SERVER_CHARACTERISTIC_UUID)
+//        var message = messageET.text.toString()
+//        var messageBytes = message.toByteArray()
+//
+//        characteristic?.value = messageBytes
+//        var success = gatt?.writeCharacteristic(characteristic)
     }
 }

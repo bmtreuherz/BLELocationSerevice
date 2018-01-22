@@ -1,5 +1,6 @@
 package bmtreuherz.blelocationservice.GattStuff.Server
 
+import android.app.Activity
 import android.bluetooth.*
 import android.bluetooth.le.AdvertiseCallback
 import android.bluetooth.le.AdvertiseData
@@ -17,10 +18,11 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import bmtreuherz.blelocationservice.GattStuff.Utilities.MessageFactory
 import bmtreuherz.blelocationservice.R
 import kotlinx.android.synthetic.main.activity_gatt_server.*
 
-class GattServerActivity : AppCompatActivity() {
+class GattServerActivity : Activity() {
 
     companion object {
         val TAG = GattServerActivity::class.java.simpleName
@@ -39,6 +41,65 @@ class GattServerActivity : AppCompatActivity() {
 
     // Connected device
     private var centralDevice: BluetoothDevice? = null
+
+
+    // TODO: THIS SHOULD BE COMMON BETWEEN BOTH CLIENT AND SERVER
+    private var positionMap = HashMap<Int, MessageFactory.PositionMessage>()
+    private var rotationMap = HashMap<Int, MessageFactory.RotationMessage>()
+
+    fun updateAssetPosition(id: Int, x: Float, y: Float, z: Float){
+
+        var notifyClient = false
+        var newPosition = MessageFactory.PositionMessage(id, x, y, z)
+
+        if(!positionMap.containsKey(id)){
+            positionMap.put(id, newPosition)
+            notifyClient = true
+        } else {
+            var position = positionMap.get(id)
+
+            if (position?.equals(newPosition) != true){
+                notifyClient = true
+            }
+        }
+
+        if (notifyClient){
+            var message = MessageFactory.createPositionValue(newPosition)
+
+            var characteristic = bluetoothGattServer
+                    ?.getService(GameObjectProfile.GAME_OBJECT_SERVICE_UUID)
+                    ?.getCharacteristic(GameObjectProfile.SERVER_TO_CLIENT_POSITION_CHARACTERISTIC_UUID)
+            characteristic?.value = message
+            bluetoothGattServer?.notifyCharacteristicChanged(centralDevice, characteristic, true)
+        }
+    }
+
+    fun updateAssetOrientation(id: Int, x: Float, y: Float, z: Float){
+
+        var notifyClient = false
+        var newOrientation = MessageFactory.RotationMessage(id, x, y, z)
+
+        if(!rotationMap.containsKey(id)){
+            rotationMap.put(id, newOrientation)
+            notifyClient = true
+        } else {
+            var rotation = rotationMap.get(id)
+
+            if (rotation?.equals(newOrientation) != true){
+                notifyClient = true
+            }
+        }
+
+        if (notifyClient){
+            var message = MessageFactory.createRotationValue(newOrientation)
+
+            var characteristic = bluetoothGattServer
+                    ?.getService(GameObjectProfile.GAME_OBJECT_SERVICE_UUID)
+                    ?.getCharacteristic(GameObjectProfile.SERVER_TO_CLIENT_ROTATION_CHARACTERISTIC_UUID)
+            characteristic?.value = message
+            bluetoothGattServer?.notifyCharacteristicChanged(centralDevice, characteristic, true)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -183,17 +244,17 @@ class GattServerActivity : AppCompatActivity() {
         if (centralDevice == null){
             return
         }
-
-        var message = messageET.text.toString()
-        var bytes = message.toByteArray()
-
-        Log.d(TAG, "Sending notification to " + centralDevice)
-        var characteristic = bluetoothGattServer
-                ?.getService(GameObjectProfile.GAME_OBJECT_SERVICE_UUID)
-                ?.getCharacteristic(GameObjectProfile.SERVER_TO_CLIENT_CHARACTERISTIC_UUID)
-        characteristic?.value = bytes
-        bluetoothGattServer?.notifyCharacteristicChanged(centralDevice, characteristic, true)
-        // TODO: Figure out how to actualy get the confirmation that the client has received this.
+//
+//        var message = messageET.text.toString()
+//        var bytes = message.toByteArray()
+//
+//        Log.d(TAG, "Sending notification to " + centralDevice)
+//        var characteristic = bluetoothGattServer
+//                ?.getService(GameObjectProfile.GAME_OBJECT_SERVICE_UUID)
+//                ?.getCharacteristic(GameObjectProfile.SERVER_TO_CLIENT_CHARACTERISTIC_UUID)
+//        characteristic?.value = bytes
+//        bluetoothGattServer?.notifyCharacteristicChanged(centralDevice, characteristic, true)
+//        // TODO: Figure out how to actualy get the confirmation that the client has received this.
     }
 
     private var gattServerCallback = object: BluetoothGattServerCallback(){
@@ -211,35 +272,47 @@ class GattServerActivity : AppCompatActivity() {
 
         override fun onCharacteristicReadRequest(device: BluetoothDevice?, requestId: Int,
                                                  offset: Int, characteristic: BluetoothGattCharacteristic?) {
-            if (GameObjectProfile.SERVER_TO_CLIENT_CHARACTERISTIC_UUID.equals(characteristic?.uuid)) {
-                // Give the client the data!
-                // TODO: Implement this in a meaningful way
-                Log.d(TAG, "READ REQUEST RECEIVED")
-                bluetoothGattServer?.sendResponse(device,
-                        requestId,
-                        BluetoothGatt.GATT_SUCCESS,
-                        0,
-                        "Here is a response for you".toByteArray())
-            }
+//            if (GameObjectProfile.SERVER_TO_CLIENT_CHARACTERISTIC_UUID.equals(characteristic?.uuid)) {
+//                // Give the client the data!
+//                // TODO: Implement this in a meaningful way
+//                Log.d(TAG, "READ REQUEST RECEIVED")
+//                bluetoothGattServer?.sendResponse(device,
+//                        requestId,
+//                        BluetoothGatt.GATT_SUCCESS,
+//                        0,
+//                        "Here is a response for you".toByteArray())
+//            }
         }
 
         override fun onCharacteristicWriteRequest(device: BluetoothDevice?, requestId: Int,
                                                   characteristic: BluetoothGattCharacteristic?,
                                                   preparedWrite: Boolean, responseNeeded: Boolean,
                                                   offset: Int, value: ByteArray?) {
-            if (GameObjectProfile.CLIENT_TO_SERVER_CHARACTERISTIC_UUID.equals(characteristic?.uuid)){
-                Log.d(TAG, "RECEIVED WRITE FROM CLIENT!")
-                Log.d(TAG, String(value!!))
 
-                if (responseNeeded){
-                    bluetoothGattServer?.sendResponse(device,
-                            requestId,
-                            BluetoothGatt.GATT_SUCCESS,
-                            0,
-                            null)
+            when(characteristic?.uuid){
+                GameObjectProfile.CLIENT_TO_SERVER_POSITION_CHARACTERISTIC_UUID -> {
+                    var positionMessage = MessageFactory.createPositonFromBytes(value!!)
+                    // TODO: Implement when receiving a position
                 }
-                runOnUiThread { clientMessageTV.text = "Message: " + String(value!!) }
+                GameObjectProfile.CLIENT_TO_SERVER_ROTATION_CHARACTERISTIC_UUID -> {
+                    var rotationMessage = MessageFactory.createRotationFromBytes(value!!)
+                    // TODO: Implement when receiving a rotation
+                }
             }
+
+//            if (GameObjectProfile.CLIENT_TO_SERVER_CHARACTERISTIC_UUID.equals(characteristic?.uuid)){
+//                Log.d(TAG, "RECEIVED WRITE FROM CLIENT!")
+//                Log.d(TAG, String(value!!))
+//
+//                if (responseNeeded){
+//                    bluetoothGattServer?.sendResponse(device,
+//                            requestId,
+//                            BluetoothGatt.GATT_SUCCESS,
+//                            0,
+//                            null)
+//                }
+//                runOnUiThread { clientMessageTV.text = "Message: " + String(value!!) }
+//            }
         }
 
 
