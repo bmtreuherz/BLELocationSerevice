@@ -1,14 +1,14 @@
 package bmtreuherz.blelocationservice
 
+import android.app.Activity
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import bmtreuherz.blelocationservice.GattStuff.Client.ScanActivity
 import bmtreuherz.blelocationservice.GattStuff.Server.GattServerActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
 
     lateinit private var emitButton: Button
     lateinit private var scanButton: Button
@@ -17,8 +17,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        emitButton = findViewById(R.id.emitButton)
-        scanButton = findViewById(R.id.scanButton)
+        emitButton = findViewById(R.id.emitButton) as Button
+        scanButton = findViewById(R.id.scanButton) as Button
 
         emitButton.setOnClickListener {
             var intent = Intent(this, GattServerActivity::class.java)

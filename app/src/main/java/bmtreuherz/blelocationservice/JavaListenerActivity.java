@@ -21,7 +21,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,7 +33,7 @@ import java.util.List;
  * Created by bradl on 1/17/2018.
  */
 
-public class JavaListenerActivity extends AppCompatActivity {
+public class JavaListenerActivity extends Activity {
 
     private BluetoothAdapter mBluetoothAdapter;
     private int REQUEST_ENABLE_BT = 1;
@@ -61,7 +60,7 @@ public class JavaListenerActivity extends AppCompatActivity {
         mBluetoothAdapter = bluetoothManager.getAdapter();
 
 
-        startScanButton = findViewById(R.id.startListeningButton);
+        startScanButton = (Button) findViewById(R.id.startListeningButton);
         startScanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -25,12 +25,11 @@ object MessageFactory {
         return value
     }
 
-    fun createPositonFromBytes(bytes: ByteArray): PositionMessage {
-        var buffer = ByteBuffer.wrap(bytes)
-        var id = buffer.getInt(1)
-        var x = buffer.getFloat(5)
-        var y = buffer.getFloat(9)
-        var z = buffer.getFloat(13)
+    fun createPositionFromBytes(bytes: ByteArray): PositionMessage {
+        var id = ByteBuffer.wrap(bytes, 1, 4).int
+        var x = ByteBuffer.wrap(bytes, 5, 4).float
+        var y = ByteBuffer.wrap(bytes, 9, 4).float
+        var z = ByteBuffer.wrap(bytes, 13, 4).float
         return PositionMessage(id, x, y, z)
     }
 

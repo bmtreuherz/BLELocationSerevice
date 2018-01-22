@@ -16,10 +16,11 @@ import android.widget.TextView
 import bmtreuherz.blelocationservice.GattStuff.Server.GameObjectProfile
 import bmtreuherz.blelocationservice.GattStuff.Utilities.MessageFactory
 import bmtreuherz.blelocationservice.R
+import com.unity3d.player.UnityPlayerActivity
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class ScanActivity : Activity() {
+class ScanActivity : UnityPlayerActivity() {
 
     companion object {
         val TAG = ScanActivity::class.java.simpleName
@@ -39,11 +40,11 @@ class ScanActivity : Activity() {
     private var scanResults = HashMap<String, BluetoothDevice>()
 
     // UI stuff
-    lateinit private var startScanButton: Button
-    lateinit private var statusTV: TextView
-    lateinit private var serverMessageTV: TextView
-    lateinit private var sendToServerButton: Button
-    lateinit private var messageET: EditText
+//    lateinit private var startScanButton: Button
+//    lateinit private var statusTV: TextView
+//    lateinit private var serverMessageTV: TextView
+//    lateinit private var sendToServerButton: Button
+//    lateinit private var messageET: EditText
 
     // TODO: THIS SHOULD BE COMMON BETWEEN BOTH CLIENT AND SERVER
     private var positionMap = HashMap<Int, MessageFactory.PositionMessage>()
@@ -76,52 +77,54 @@ class ScanActivity : Activity() {
 
     fun updateAssetOrientation(id: Int, x: Float, y: Float, z: Float){
 
-        var notifyServer = false
-        var newOrientation = MessageFactory.RotationMessage(id, x, y, z)
-
-        if(!rotationMap.containsKey(id)){
-            rotationMap.put(id, newOrientation)
-            notifyServer = true
-        } else {
-            var rotation = rotationMap.get(id)
-
-            if (rotation?.equals(newOrientation) != true){
-                notifyServer = true
-            }
-        }
-
-        if (notifyServer){
-            var service = gatt?.getService(GameObjectProfile.GAME_OBJECT_SERVICE_UUID)
-            var characteristic = service?.getCharacteristic(GameObjectProfile.CLIENT_TO_SERVER_ROTATION_CHARACTERISTIC_UUID)
-            var message = MessageFactory.createRotationValue(newOrientation)
-            characteristic?.value = message
-            var success = gatt?.writeCharacteristic(characteristic)
-        }
+//        var notifyServer = false
+//        var newOrientation = MessageFactory.RotationMessage(id, x, y, z)
+//
+//        if(!rotationMap.containsKey(id)){
+//            rotationMap.put(id, newOrientation)
+//            notifyServer = true
+//        } else {
+//            var rotation = rotationMap.get(id)
+//
+//            if (rotation?.equals(newOrientation) != true){
+//                notifyServer = true
+//            }
+//        }
+//
+//        if (notifyServer){
+//            var service = gatt?.getService(GameObjectProfile.GAME_OBJECT_SERVICE_UUID)
+//            var characteristic = service?.getCharacteristic(GameObjectProfile.CLIENT_TO_SERVER_ROTATION_CHARACTERISTIC_UUID)
+//            var message = MessageFactory.createRotationValue(newOrientation)
+//            characteristic?.value = message
+//            var success = gatt?.writeCharacteristic(characteristic)
+//        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_scan)
+//        setContentView(R.layout.activity_scan)
 
         var bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
+//
+//        sendToServerButton = findViewById(R.id.sendToServerButton)
+//        messageET = findViewById(R.id.messageET)
+//        sendToServerButton.setOnClickListener {
+//            sendMessageToServer()
+//        }
 
-        sendToServerButton = findViewById(R.id.sendToServerButton)
-        messageET = findViewById(R.id.messageET)
-        sendToServerButton.setOnClickListener {
-            sendMessageToServer()
-        }
+//        statusTV = findViewById(R.id.scanStatusTV)
+//        startScanButton = findViewById(R.id.startScanButton)
+//        serverMessageTV = findViewById(R.id.serverMessageTV)
+//        startScanButton.setOnClickListener {
+//            if (isScanning){
+//                stopScan()
+//            } else{
+//                startScan()
+//            }
+//        }
 
-        statusTV = findViewById(R.id.scanStatusTV)
-        startScanButton = findViewById(R.id.startScanButton)
-        serverMessageTV = findViewById(R.id.serverMessageTV)
-        startScanButton.setOnClickListener {
-            if (isScanning){
-                stopScan()
-            } else{
-                startScan()
-            }
-        }
+        startScan()
     }
 
     override fun onResume() {
@@ -154,7 +157,7 @@ class ScanActivity : Activity() {
 
         handler = Handler()
         handler?.postDelayed(this::stopScan, SCAN_PERIOD)
-        startScanButton.text = "Stop Scanning"
+//        startScanButton.text = "Stop Scanning"
         Log.d(TAG, "STARTED SCAN B")
 
     }
@@ -166,7 +169,7 @@ class ScanActivity : Activity() {
         }
         isScanning = false
         handler = null
-        startScanButton.text = "Start Scanning"
+//        startScanButton.text = "Start Scanning"
         Log.d(TAG, "STOPPED SCANNING")
     }
 
@@ -235,12 +238,12 @@ class ScanActivity : Activity() {
 
             if (newState == BluetoothProfile.STATE_CONNECTED){
                 isConnected = true
-                runOnUiThread {statusTV.text = "Status: Connected" }
+//                runOnUiThread {statusTV.text = "Status: Connected" }
                 Log.d(TAG, "Client Connected!!!")
                 gatt?.discoverServices()
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED){
                 Log.d(TAG, "Client Disconnected!!!")
-                runOnUiThread {statusTV.text = "Status: Not Connected" }
+//                runOnUiThread {statusTV.text = "Status: Not Connected" }
                 disconnectGattServer()
             }
         }
@@ -255,18 +258,18 @@ class ScanActivity : Activity() {
             var service = gatt?.getService(GameObjectProfile.GAME_OBJECT_SERVICE_UUID)
 
             var outPositionCharacteristic = service?.getCharacteristic(GameObjectProfile.CLIENT_TO_SERVER_POSITION_CHARACTERISTIC_UUID)
-            var outRotationCharacteristic = service?.getCharacteristic(GameObjectProfile.CLIENT_TO_SERVER_ROTATION_CHARACTERISTIC_UUID)
+//            var outRotationCharacteristic = service?.getCharacteristic(GameObjectProfile.CLIENT_TO_SERVER_ROTATION_CHARACTERISTIC_UUID)
             var inPositionCharacteristic = service?.getCharacteristic(GameObjectProfile.SERVER_TO_CLIENT_POSITION_CHARACTERISTIC_UUID)
-            var inRotationCharacteristic = service?.getCharacteristic(GameObjectProfile.SERVER_TO_CLIENT_ROTATION_CHARACTERISTIC_UUID)
+//            var inRotationCharacteristic = service?.getCharacteristic(GameObjectProfile.SERVER_TO_CLIENT_ROTATION_CHARACTERISTIC_UUID)
 
 
 
             outPositionCharacteristic?.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-            outRotationCharacteristic?.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+//            outRotationCharacteristic?.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
 
 
             gatt?.setCharacteristicNotification(inPositionCharacteristic, true)
-            gatt?.setCharacteristicNotification(inRotationCharacteristic, true)
+//            gatt?.setCharacteristicNotification(inRotationCharacteristic, true)
         }
 
         override fun onCharacteristicWrite(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {
@@ -279,13 +282,13 @@ class ScanActivity : Activity() {
 
             when(characteristic?.uuid){
                 GameObjectProfile.SERVER_TO_CLIENT_POSITION_CHARACTERISTIC_UUID -> {
-                    var positionMessage = MessageFactory.createPositonFromBytes(characteristic?.value!!)
+                    var positionMessage = MessageFactory.createPositionFromBytes(characteristic?.value!!)
                     // TODO: Do action when position changes
                 }
-                GameObjectProfile.SERVER_TO_CLIENT_ROTATION_CHARACTERISTIC_UUID -> {
-                    var rotationMessage = MessageFactory.createRotationFromBytes(characteristic?.value!!)
-                    // TODO: Do action when rotation changes
-                }
+//                GameObjectProfile.SERVER_TO_CLIENT_ROTATION_CHARACTERISTIC_UUID -> {
+//                    var rotationMessage = MessageFactory.createRotationFromBytes(characteristic?.value!!)
+//                    // TODO: Do action when rotation changes
+//                }
             }
         }
     }

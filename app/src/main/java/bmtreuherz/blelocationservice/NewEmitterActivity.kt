@@ -1,17 +1,18 @@
 package bmtreuherz.blelocationservice
 
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.AdvertiseCallback
 import android.bluetooth.le.AdvertiseData
 import android.bluetooth.le.AdvertiseSettings
 import android.bluetooth.le.BluetoothLeAdvertiser
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import bmtreuherz.blelocationservice.utilities.BeaconProtocol
 import bmtreuherz.blelocationservice.utilities.getBytesFromUUID
+import org.w3c.dom.Text
 import java.nio.ByteBuffer
 import java.util.*
 
@@ -19,7 +20,7 @@ import java.util.*
  * Created by Bradley on 1/17/18.
  */
 
-class NewEmitterActivity : AppCompatActivity() {
+class NewEmitterActivity : Activity() {
 
     // Configuration members
     private val appUUID = UUID.fromString("3F643DCB-DD1E-4300-8FD6-91543CD0E648")
@@ -46,13 +47,13 @@ class NewEmitterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_emitter)
 
         // Get the UI Components
-        startAdvertisingButton = findViewById(R.id.startAdvertisingButton)
+        startAdvertisingButton = findViewById(R.id.startAdvertisingButton) as Button
         startAdvertisingButton.setOnClickListener {
             enableAdvertising(!isAdvertising)
         }
-        payloadET = findViewById(R.id.payloadET)
-        majorTV = findViewById(R.id.majorTV)
-        minorTV = findViewById(R.id.minorTV)
+        payloadET = findViewById(R.id.payloadET) as EditText
+        majorTV = findViewById(R.id.majorTV) as TextView
+        minorTV = findViewById(R.id.minorTV) as TextView
 
         // Set the beacon protocl
         beaconProtocol = BeaconProtocol.ALT_BEACON

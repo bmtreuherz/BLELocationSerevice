@@ -1,8 +1,9 @@
 package bmtreuherz.blelocationservice
 
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.*
-import android.support.v7.app.AppCompatActivity
+//import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import bmtreuherz.blelocationservice.utilities.BeaconProtocol
@@ -11,7 +12,7 @@ import bmtreuherz.blelocationservice.utilities.getUUIDFromBytes
 import java.nio.ByteBuffer
 import java.util.*
 
-class EmitterActivity : AppCompatActivity() {
+class EmitterActivity : Activity() {
 
     // Configuration members
     private val appUUID = UUID.fromString("7b334cce-f705-11e7-8c3f-9a214cf093ae")
@@ -33,7 +34,7 @@ class EmitterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_emitter)
 
         // Get the UI Components
-        startAdvertisingButton = findViewById(R.id.startAdvertisingButton)
+        startAdvertisingButton = findViewById(R.id.startAdvertisingButton) as Button
         startAdvertisingButton.setOnClickListener {
             startAdvertising()
         }

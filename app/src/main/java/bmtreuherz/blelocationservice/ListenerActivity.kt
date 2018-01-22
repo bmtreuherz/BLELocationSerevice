@@ -1,8 +1,8 @@
 package bmtreuherz.blelocationservice
 
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.*
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -13,7 +13,7 @@ import bmtreuherz.blelocationservice.utilities.getUUIDFromBytes
 import java.nio.ByteBuffer
 import java.util.*
 
-class ListenerActivity : AppCompatActivity() {
+class ListenerActivity : Activity() {
 
     // Configuration members
     private val appUUID = UUID.fromString("7b334cce-f705-11e7-8c3f-9a214cf093ae")
@@ -41,13 +41,13 @@ class ListenerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_listener)
 
         // Find UI elements
-        startScanButton = findViewById(R.id.startListeningButton)
-        foundTV = findViewById(R.id.foundTV)
-        UUIDTV = findViewById(R.id.UUIDTV)
-        majorTV = findViewById(R.id.majorTV)
-        minorTV = findViewById(R.id.minorTV)
-        distanceTV = findViewById(R.id.distanceTV)
-        rssiTV = findViewById(R.id.rssiTV)
+        startScanButton = findViewById(R.id.startListeningButton) as Button
+        foundTV = findViewById(R.id.foundTV) as TextView
+        UUIDTV = findViewById(R.id.UUIDTV) as TextView
+        majorTV = findViewById(R.id.majorTV)as TextView
+        minorTV = findViewById(R.id.minorTV)as TextView
+        distanceTV = findViewById(R.id.distanceTV) as TextView
+        rssiTV = findViewById(R.id.rssiTV)as TextView
 
         // Set the click listener
         startScanButton.setOnClickListener {

@@ -9,9 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -25,7 +23,7 @@ import java.util.*
 /**
  * Created by Bradley on 1/17/18.
  */
-class NewListenerActivity : AppCompatActivity() {
+class NewListenerActivity : Activity() {
 
     // Bluetooth Members
     private var bluetoothAdapter: BluetoothAdapter? = null
@@ -62,15 +60,15 @@ class NewListenerActivity : AppCompatActivity() {
         bluetoothAdapter = bluetoothManager.adapter
 
         // Initialize UI Components
-        scanButton = findViewById(R.id.startListeningButton)
-        scanButton.setOnClickListener { scanLeDevice(!isScanning) }
-        foundTV = findViewById(R.id.foundTV)
-        UUIDTV = findViewById(R.id.UUIDTV)
-        payloadTV = findViewById(R.id.payloadTV)
-        majorTV = findViewById(R.id.majorTV)
-        minorTV = findViewById(R.id.minorTV)
-        distanceTV = findViewById(R.id.distanceTV)
-        rssiTV = findViewById(R.id.rssiTV)
+//        scanButton = findViewById(R.id.startListeningButton)
+//        scanButton.setOnClickListener { scanLeDevice(!isScanning) }
+//        foundTV = findViewById(R.id.foundTV)
+//        UUIDTV = findViewById(R.id.UUIDTV)
+//        payloadTV = findViewById(R.id.payloadTV)
+//        majorTV = findViewById(R.id.majorTV)
+//        minorTV = findViewById(R.id.minorTV)
+//        distanceTV = findViewById(R.id.distanceTV)
+//        rssiTV = findViewById(R.id.rssiTV)
     }
 
     // TODO: REQUEST BT AND LOCATION PERMISSIONS IN THE NEW OFFICIAL ANDROID WAY
@@ -94,13 +92,13 @@ class NewListenerActivity : AppCompatActivity() {
         }
 
         // Check if we have location permissions
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            // Request permissions if we don't
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_ACCESS_FINE_LOCATION)
-
-        }
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+//            // Request permissions if we don't
+//            ActivityCompat.requestPermissions(this,
+//                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+//                    REQUEST_ACCESS_FINE_LOCATION)
+//
+//        }
     }
 
     private fun setScanSettings(){
