@@ -21,6 +21,7 @@ object MessageFactory {
         buffer.putFloat(position.z)
 
         var value = ByteArray(17)
+        buffer.position(0)
         buffer.get(value, 0, 17)
         return value
     }

@@ -25,27 +25,43 @@
         android:id="@+id/serverMessageTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:layout_below="@+id/scanStatusTV"
         android:layout_centerHorizontal="true"
         android:text="Message: N/A"/>
 
     <EditText
-        android:id="@+id/messageET"
+        android:id="@+id/xTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/serverMessageTV"
         android:layout_centerHorizontal="true"
-        android:text="Message to the server"/>
+        android:text="0.0"/>
+    <EditText
+        android:id="@+id/yTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/xTV"
+        android:layout_centerHorizontal="true"
+        android:text="0.0"/>
+    <EditText
+        android:id="@+id/zTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/yTV"
+        android:layout_centerHorizontal="true"
+        android:text="0.0"/>
 
     <Button
         android:id="@+id/sendToServerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_below="@+id/messageET"
+        android:layout_below="@+id/zTV"
         android:layout_centerHorizontal="true"
-        android:text="Send Message to Server"/>
+        android:text="Place Object"/>
 
 </RelativeLayout>
